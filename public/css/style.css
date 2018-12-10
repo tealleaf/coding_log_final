@@ -1,0 +1,50 @@
+.logo{
+  width:130px;
+  margin:auto;
+}
+
+.body-100 {
+    min-height: 100vh;
+}
+
+.forestGreen {
+    background-color: #0e8448 !important;
+}
+
+.orange {
+    background-color: #FF8C00 !important;
+}
+
+.text-black {
+    color: black;
+}
+
+.text-white {
+    color: white;
+}
+
+.boxSize {
+    /*min-height: 15rem;
+    max-height: 20rem;*/
+    /*height: 100%;*/
+
+    height: 20rem;
+    margin: 1em;
+}
+
+.overflowScroll {
+	overflow: scroll !important;
+}
+
+.edit-hover:hover {
+	color:yellow;
+	cursor: pointer;
+}
+
+.active-row {
+	background-color: grey;
+}
+
+.jubotron-custom {
+    background-color: white !important;
+}

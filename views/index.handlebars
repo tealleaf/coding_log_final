@@ -1,0 +1,165 @@
+
+<div class="container row m-auto justify-content-center">
+  {{#if user}}
+    <div>You are logged in {{user.name}}</div>
+    <br>
+    <div>Today's date: {{todayMonth}} {{todayYear}}</div>
+
+  <div class="col-md-12 d-flex flex-column flex-md-row">
+    {{#each daysInWeek}}
+      <div class="card {{#if this.isToday}}bg-success text-white{{else}}bg-light{{/if}}">
+        <div class="card-header">{{this.name}}</div>
+        <div class="card-body">
+          <h5 class="card-title">{{this.day}}</h5>
+          
+          <p class="card-text">Ohai Lorem ipsum do. {{this.dateFormatted}}</p>
+        </div>
+      </div>
+    {{/each}}
+
+  </div>
+  
+  {{!-- Code Entry --}}
+  <div class="col-md-12 row d-flex justify-content-center">
+    <div class="col-md-4">
+      <div class="card border-primary mb-3" style="max-width: 18rem;">
+        <div class="card-header">{{user.name}}'s Coding Log</div>
+        <div class="card-body text-primary">
+          <h5 class="card-title">Log Entry</h5>
+
+          <p class="card-text">
+            <strong class="text-muted">Total Time Coded (mins)</strong>
+            <p class="text-muted">{{totalTimeCoded}} min(s)</p>
+
+            <strong class="text-muted">Average Time Coded (min/day)</strong>
+            <p class="text-muted">{{averageCodeTime}} mins/day</p>
+
+            <strong class="text-muted">Member for:</strong>
+            <p class="text-muted">{{totalDaysMember}} day(s)</p>
+
+            <strong class="text-muted">CodingLogEntries</strong>
+            <p class="text-muted">
+              <ul>
+                {{#each codingLogEntries}}
+                  <li>{{this.minutesCoded}}</li>
+                  
+                {{/each}}
+              </ul>
+            </p>
+
+            
+          </p>
+          <form method="POST" action="/addEntry">
+            <div class="form-group">
+              <label for="minutesCodedInput">Time Coded (mins)</label>
+              <input type="number" class="form-control" id="minutesCodedInput" name="minutesCodedInput" placeholder="30, 50, 120, etc" maxlength="3">
+            </div>
+            <div class="form-group">
+              <label for="goalInput">Goal</label>
+              <input type="text" class="form-control" id="goalInput" name="goalInput" placeholder="E.g: Do some javascript yo (250 words max)" maxlength="250">
+            </div>
+            <div class="form-group form-check">
+              <input type="checkbox" class="form-check-input" id="goalAchievedInput" name="goalAchievedInput">
+              <label class="form-check-label" for="goalAchievedInput">Achieved Goal</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    {{else}}
+    {{!-- Pre-logged In ======================================================= 
+      ========================================================================== --}}
+    <div class="card">
+      {{!-- <img class="card-img-top" src="https://via.placeholder.com/300x200/09f/fff.png" alt="Card image cap"> --}}
+      <div class="card-body">
+        {{!-- Tabs --}}
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="register-tab" data-toggle="tab" href="#register-content" role="tab" aria-controls="register-content" aria-selected="true">Register</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="login-tab" data-toggle="tab" href="#login-content" role="tab" aria-controls="login-content" aria-selected="false">Login</a>
+          </li>
+        </ul>
+
+        {{!-- Tab Content --}}
+        <div class="tab-content" id="myTabContent">
+
+          {{!-- Register Form --}}
+          <div class="tab-pane fade show active" id="register-content" role="tabpanel" aria-labelledby="register-tab">
+            {{!-- Begin REGISTER Form --}}
+            <form method="POST" action="/register" id="registration_form">
+              <div class="form-group">
+
+                {{!-- Name --}}
+                <label for="student_name">Name</label>
+                <input type="text" class="form-control" name="student_name" placeholder="Firstname Lastname" required>
+
+                {{!-- Email --}}
+                <label for="student_email">Email address</label>
+                <input type="email" class="form-control" name="student_email" aria-describedby="emailHelp" placeholder="Enter email" required>
+                <small id="emailHelp" class="form-text text-muted">Knights emails only.</small>
+
+                {{!-- Class and Session --}}
+                <label for="student_class">Class and Session</label>
+                <select name="student_class" class="form-control">
+                  <option selected>Select...</option>
+                  <option>DIG0000-0</option>
+                  <option>DIG0000-1</option>
+                  <option>DIG0000-2</option>
+                  <option>DIG0000-3</option>
+                </select>
+
+              </div>
+
+              {{!-- Password Creation --}}
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" placeholder="Password" required>
+              </div>
+
+              {{!-- Confirm Password --}}
+              <div class="form-group">
+                <label for="confirm_password">Confirm Password</label>
+                <input type="password" class="form-control" name="confirm_password" placeholder="Confirm Password" required>
+              </div>
+
+              <ul id="registration_form_message">
+              </ul>
+
+              <button type="submit" class="btn btn-primary">Create</button>
+            </form>
+
+          </div> {{!-- End Register Tab --}}
+
+          {{!-- Login Form --}}
+          <div class="tab-pane fade" id="login-content" role="tabpanel" aria-labelledby="login-tab">
+            
+             <form method="post" action="/login">
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" name="email" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" name="password" class="form-control" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            
+          </div>
+
+        </div>
+      </div> {{!-- End Card Body --}}
+    </div> {{!-- End Card --}}
+
+    {{/if}}
+
+  </div> {{!-- End Column 1 --}}
+  
+</div> {{!-- End container --}}
+

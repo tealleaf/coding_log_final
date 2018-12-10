@@ -1,0 +1,82 @@
+{
+  "day_1": {
+    "day": 5, //Friday
+    "date": 7,
+    "month": 10, //november
+    "year": 2018,
+    "goal": "Nada",
+    "timeCoded": 0
+  },
+  "day_2": {
+    "day": 6, //Saturday
+    "date": 8,
+    "month": 10, //november
+    "year": 2018,
+    "goal": "Nada",
+    "timeCoded": 0
+  },
+  "day_3": {
+    "day": 0, //Sunday
+    "date": 9,
+    "month": 10, //november
+    "year": 2018,
+    "goal": "Nada",
+    "timeCoded": 0
+  },
+  "day_4": {
+    "day": 0, //monday
+    "date": 10,
+    "month": 10, //november
+    "year": 2018,
+    "goal": "Nada",
+    "timeCoded": 0
+  },
+  "day_5": {
+    "day": 0, //monday
+    "date": 11,
+    "month": 10, //november
+    "year": 2018,
+    "goal": "Nada",
+    "timeCoded": 0
+  },
+  "day_6": {
+    "day": 0, //monday
+    "date": 12,
+    "month": 10, //november
+    "year": 2018,
+    "goal": "Nada",
+    "timeCoded": 0
+  },
+  "day_7": {
+    "day": 0, //monday
+    "date": 13,
+    "month": 10, //november
+    "year": 2018,
+    "goal": "Nada",
+    "timeCoded": 0
+  },
+  "day_8": {
+    "day": 0, //monday
+    "date": 14,
+    "month": 10, //november
+    "year": 2018,
+    "goal": "Nada",
+    "timeCoded": 0
+  },
+  "day_9": {
+    "day": 0, //monday
+    "date": 15,
+    "month": 10, //november
+    "year": 2018,
+    "goal": "Nada",
+    "timeCoded": 0
+  },
+  "day_10": {
+    "day": 0, //monday
+    "date": 16,
+    "month": 10, //november
+    "year": 2018,
+    "goal": "Nada",
+    "timeCoded": 0
+  }
+}
