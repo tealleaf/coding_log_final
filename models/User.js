@@ -28,6 +28,9 @@ const dailyEntrySchema = new mongoose.Schema({
     maxlength: 250,
     default: 'Nothing yet'
   },
+  belongsToUser: {
+    type: String
+  },
   workCompleted: {
     type: String,
     maxlength: 250,

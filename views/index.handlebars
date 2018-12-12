@@ -1,18 +1,28 @@
 
 <div class="container row m-auto justify-content-center">
   {{#if user}}
-    <div>You are logged in {{user.name}}</div>
-    <br>
-    <div>Today's date: {{todayMonth}} {{todayYear}}</div>
+
+  <div>{{todayMonth}} {{todayYear}}</div>
 
   <div class="col-md-12 d-flex flex-column flex-md-row">
-    {{#each daysInWeek}}
-      <div class="card {{#if this.isToday}}bg-success text-white{{else}}bg-light{{/if}}">
-        <div class="card-header">{{this.name}}</div>
+    {{#each datesAndCodedCombined}}
+      <div class="card {{#if this.daysInWeek.isToday}}bg-success text-white{{else}}bg-light{{/if}}">
+        <div class="card-header">{{this.daysInWeek.name}}</div>
         <div class="card-body">
-          <h5 class="card-title">{{this.day}}</h5>
+          <h5 class="card-title">{{this.daysInWeek.day}}</h5>
           
-          <p class="card-text">Ohai Lorem ipsum do. {{this.dateFormatted}}</p>
+          {{#if this.thisWeekDatesCoded.goalAchieved}}
+          <i class="material-icons forestGreenCheck">check</i>
+          {{/if}}
+
+          <p class="card-text">
+            Goal: {{this.thisWeekDatesCoded.goal}}
+          </p>
+
+          <p class="card-text">
+            Time coded (minutes): <div class="forestGreenCheck">{{this.thisWeekDatesCoded.minutesCoded}}</div>
+          </p>
+
         </div>
       </div>
     {{/each}}
@@ -22,7 +32,7 @@
   {{!-- Code Entry --}}
   <div class="col-md-12 row d-flex justify-content-center">
     <div class="col-md-4">
-      <div class="card border-primary mb-3" style="max-width: 18rem;">
+      <div class="card border-primary mb-3 mt-4" style="max-width: 18rem;">
         <div class="card-header">{{user.name}}'s Coding Log</div>
         <div class="card-body text-primary">
           <h5 class="card-title">Log Entry</h5>
@@ -36,17 +46,6 @@
 
             <strong class="text-muted">Member for:</strong>
             <p class="text-muted">{{totalDaysMember}} day(s)</p>
-
-            <strong class="text-muted">CodingLogEntries</strong>
-            <p class="text-muted">
-              <ul>
-                {{#each codingLogEntries}}
-                  <li>{{this.minutesCoded}}</li>
-                  
-                {{/each}}
-              </ul>
-            </p>
-
             
           </p>
           <form method="POST" action="/addEntry">

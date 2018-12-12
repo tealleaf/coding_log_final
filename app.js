@@ -181,6 +181,8 @@ app.use(function(req, res, next){
   // res.locals.daysInWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   res.locals.daysInWeek = daysInWeek; //daysInWeek[i].dateFormatted
 
+  res.locals.datesAndCodedCombined = req.session.datesAndCodedCombined;
+
   //Passing current week's variables as globals. We will use this to query our codingLogEntries to see if any match up
   // res.locals.thisSundayFormatted = daysInWeek[0].dateFormatted;
   // res.locals.thisSundayFormatted = daysInWeek[1].dateFormatted;
@@ -198,10 +200,15 @@ app.get('/', (req, res) => {
   const title = 'CodingLog Home';
 
   let totalTimeCoded = req.session.totalTimeCoded;
-  console.log('This is totalTimeCoded in get /' + totalTimeCoded);
+  // console.log('This is totalTimeCoded in get /' + totalTimeCoded);
   let totalDaysMember = req.session.totalDaysMember;
   let averageCodeTime = req.session.averageCodeTime;
   let codingLogEntries = req.session.codingLogEntries;
+
+  // Access to daysInWeek are now in session
+  req.session.daysInWeek = daysInWeek;
+  // console.log('THIS IS DAYSINWEEK SESSION');
+  // console.log(req.session.daysInWeek);
 
   res.render('index', {
     title: title,
@@ -229,6 +236,7 @@ app.listen(port, () =>{
 });
 
 
+
 /*
  Notes (for myself):
   1. INJECTIONS. SECURITY.
@@ -237,4 +245,5 @@ app.listen(port, () =>{
   4. node --trace-warnings app.js
   5. Ran into the problem of declaring and initalizing a variable and then it suddenly becomes undefined because of asynchronous programming. Because my function was async... the things inside of it were running async so variables got messed up
   6. findByIdAndUpdate issue. findById issue. mongoose = require('mongoose').set('debug', true);, why pluralize, why, it's NOT smart! HOLY SHIT IT WENT AS FAR AS MODIFYING MY COLLECTION TO BE FROM DAILYENTRY TO DAILYENTRIES. 
+  7. setting sessions is reaaaally weird. Like it doesn't even recogize the variable until I console.log it somewhere, then all of the sudden it's not undefined anymore. Why?
 */

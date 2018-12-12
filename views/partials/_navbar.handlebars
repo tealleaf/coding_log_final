@@ -17,15 +17,12 @@
     <ul class="navbar-nav ml-auto">
       {{#if user}} {{!-- if user is logged in --}}
         <li class="nav-item dropdown">
-          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" id="navbarDropdownMenuLink">Coding Log</a>
+          <a href="#" class="nav-link dropdown-toggle text-white" data-toggle="dropdown" id="navbarDropdownMenuLink">{{user.name}}</a>
           <div class="dropdown-menu">
-            <a href="/ideas" class="dropdown-item">Log</a>
-            <a href="/ideas/add" class="dropdown-item">coding Log</a>
+            <a href="/logout" class="nav-link">Logout</a>
           </div>
         </li>
-        <li class="nav-item">
-          <a href="/logout" class="nav-link">Logout</a>
-        </li>
+
       {{/if}}
     </ul>
 

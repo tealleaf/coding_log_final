@@ -20,6 +20,8 @@ const User = UsersModel.User; //this is the model of the user, in other word the
 const dateObject = UsersModel.dateObject; //model of dateObject
 const DailyEntry = UsersModel.DailyEntry;
 
+// let daysInWeek = req.session.daysInWeek; //interesting... it's not defined if I place it here. B/c it hasn't been called yet 
+
 // Login Form POST, this is freaking /users/login, WHICH SUCKS.
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', {
@@ -52,7 +54,6 @@ router.get('/successTest', (req, res) => {
 
     for(let i = 0; i < user.codingLogEntries.length; i++) {
       totalTimeCoded += user.codingLogEntries[i].minutesCoded;
-      console.log('totalTimeCoded (min): ' + totalTimeCoded);
     }
 
     // Calculates total days member; calls everytime you log in (because no websocket for now)
@@ -73,7 +74,8 @@ router.get('/successTest', (req, res) => {
         "$set": {
           totalTimeCoded,
           totalDaysMember,
-          averageCodeTime
+          averageCodeTime,
+          belongsToUser: userId
         }
       }, {new: true}
     );
@@ -83,9 +85,41 @@ router.get('/successTest', (req, res) => {
     req.session.totalDaysMember = totalDaysMember;
     req.session.averageCodeTime = averageCodeTime;
     req.session.codingLogEntries = user.codingLogEntries;
+    let daysInWeek = req.session.daysInWeek;
+    
+    let thisWeekDatesCoded = [];
+    for(let d = 0; d < daysInWeek.length; d++) {
 
-    console.log('SESSION CHECK AFTER UPDATING: ' + req.session.totalTimeCoded);
-    console.log('updateUserStatus (SUCCESSFUL): ' + result);
+      let dateCodedMatchDate = await User.find( //TOOK ME FOREVER
+        { "_id": userId }, { "codingLogEntries": {$elemMatch: {dateCodedFormatted: daysInWeek[d].dateFormatted}} }
+      );
+
+      if(await dateCodedMatchDate[0].codingLogEntries.length > 0) { //if date found match
+        thisWeekDatesCoded.push(dateCodedMatchDate[0].codingLogEntries[0])
+      } else { //if date foundn doesn't match NULL
+        thisWeekDatesCoded.push({
+          'goal': 'Nada for now',
+          'workCompleted': 'Gotta get started!',
+          'minutesCoded': '0',
+          'dateCodedFormatted': daysInWeek[d].dateFormatted
+        }); //put placeholder
+      }
+    }
+
+    // combine information into the same array
+    let datesAndCodedCombined = [];
+    for(let z = 0; z < daysInWeek.length; z++) {
+      await datesAndCodedCombined.push({
+        thisWeekDatesCoded: thisWeekDatesCoded[z],
+        daysInWeek: daysInWeek[z]
+      });
+    }
+
+    req.session.datesAndCodedCombined = datesAndCodedCombined;
+    console.log('this is datesAndCodedCombined updateUserStatus_listEntries ========================================================');
+
+    console.log(datesAndCodedCombined);
+
     res.redirect('/');
 
   }
@@ -100,7 +134,7 @@ router.get('/successTest', (req, res) => {
 });
 
 router.get('/failureTest', (req, res) => {
-  res.render('testPage', {testMessage: 'Failure' });
+  res.render('testPage', {testMessage: 'Failure, something went wrong and it is most likely your, the client, fault. :C' });
 });
 
 // Register Form POST
@@ -198,6 +232,9 @@ router.get('/logout', (req, res) => {
   req.session.totalDaysMember = null; // resets session variable
   req.session.averageCodeTime = null; // resets session variable
   req.session.codingLogEntries = null; // resets session variable
+  req.session.daysInWeek = null;
+  req.session.thisWeekDatesCoded = null;
+  req.session.datesAndCodedCombined = null;
   req.logout();
   req.flash('success_msg', 'You are logged out');
   res.redirect('/');
@@ -277,7 +314,8 @@ router.post('/addEntry', ensureAuthenticated, (req, res) => {
         "$set": {
           totalTimeCoded,
           totalDaysMember,
-          averageCodeTime
+          averageCodeTime,
+          belongsToUser: userId
         }
       }, {new: true}
     );
@@ -287,9 +325,45 @@ router.post('/addEntry', ensureAuthenticated, (req, res) => {
     req.session.totalDaysMember = totalDaysMember;
     req.session.averageCodeTime = averageCodeTime;
     req.session.codingLogEntries = user.codingLogEntries;
+    let daysInWeek = req.session.daysInWeek;
 
-    console.log('updateUserStatus (SUCCESSFUL UPDATED OR ADDED): ' + result);
-    console.log('This is session in updateUserStatus_listEntries_change ' + req.session.totalTimeCoded);
+    // let dateCodedMatchDate; daysInWeek[d].dateFormatted
+    let thisWeekDatesCoded = []; //reset
+    for(let d = 0; d < daysInWeek.length; d++) {
+
+      let dateCodedMatchDate = await User.find( //TOOK ME FOREVER
+        { "_id": userId }, { "codingLogEntries": {$elemMatch: {dateCodedFormatted: daysInWeek[d].dateFormatted}} }
+      );
+
+      if(await dateCodedMatchDate[0].codingLogEntries.length > 0) { //if date found match
+        thisWeekDatesCoded.push(dateCodedMatchDate[0].codingLogEntries[0])
+      } else { //if date foundn doesn't match NULL
+        thisWeekDatesCoded.push({
+          'goal': 'Nada for now',
+          'workCompleted': 'Gotta get started!',
+          'minutesCoded': '0',
+          'dateCodedFormatted': daysInWeek[d].dateFormatted
+        }); //put placeholder
+
+        console.log('Has been pushed EMPTY: ');
+        console.log(thisWeekDatesCoded);
+      }
+    }
+
+    // combine information into the same array
+    let datesAndCodedCombined = [];
+    for(let z = 0; z < daysInWeek.length; z++) {
+      await datesAndCodedCombined.push({
+        thisWeekDatesCoded: thisWeekDatesCoded[z],
+        daysInWeek: daysInWeek[z]
+      });
+    }
+    console.log('this is datesAndCodedCombined (in change) ========================================================');
+    console.log(datesAndCodedCombined);
+
+    // stores datesCoded in session to access in handlebars JUST KIDDING YOU NEED THIS IN APP.USE MIDDLEARE RES.LOCALS
+    req.session.datesAndCodedCombined = datesAndCodedCombined;
+    
     res.redirect('/');
 
   }
@@ -311,6 +385,7 @@ router.post('/addEntry', ensureAuthenticated, (req, res) => {
 
     user.codingLogEntries.push(new DailyEntry(
       {
+        belongsToUser: userId,
         goal: req.body.goalInput,
         minutesCoded: req.body.minutesCodedInput,
         goalAchieved: req.body.goalAchievedInput,
@@ -340,6 +415,7 @@ router.post('/addEntry', ensureAuthenticated, (req, res) => {
     // console.log(newId);
 
     let updateLogEntry = {
+      belongsToUser: userId,
       goal: req.body.goalInput,
       minutesCoded: req.body.minutesCodedInput,
       goalAchieved: req.body.goalAchievedInput,
@@ -356,8 +432,6 @@ router.post('/addEntry', ensureAuthenticated, (req, res) => {
           }
       }, {new: true}
     );
-
-    console.log(result);
 
     req.flash('success_msg', 'Time coded updated!!');
     updateUserStatus_listEntries_change(userId);
